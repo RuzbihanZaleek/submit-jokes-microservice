@@ -26,6 +26,11 @@ export class JokesController {
     return this.jokesService.findAll();
   }
 
+  @Get('types')
+  async findAllTypes() {
+    return this.jokesService.findAllTypes();
+  }
+
   @Delete(':id')
   async deleteJoke(@Param() params: DeleteJokeDto) {
     try {

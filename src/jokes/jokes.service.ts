@@ -25,6 +25,17 @@ export class JokesService {
     }
   }
 
+  async findAllTypes(): Promise<string[]> {
+    try {
+      const types = await this.jokeModel.distinct('type').exec();
+      return types;
+    } catch (error) {
+      throw new InternalServerErrorException(
+        `Error retrieving joke types: ${error.message}`,
+      );
+    }
+  }
+
   async findAll(): Promise<Joke[]> {
     try {
       return await this.jokeModel.find().exec();
