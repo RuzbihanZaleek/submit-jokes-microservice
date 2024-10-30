@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -7,6 +8,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Joke } from './schemas/joke.schema';
 import { CreateJokeDto } from './dto/create-joke.dto';
+import { UpdateJokeDto } from './dto/update-joke.dto';
 
 @Injectable()
 export class JokesService {
@@ -16,6 +18,13 @@ export class JokesService {
 
   async create(createJokeDto: CreateJokeDto): Promise<Joke> {
     try {
+      const existingJoke = await this.jokeModel
+        .findOne({ content: createJokeDto.content })
+        .exec();
+      if (existingJoke) {
+        throw new ConflictException('Joke already exists');
+      }
+
       const newJoke = new this.jokeModel(createJokeDto);
       return await newJoke.save();
     } catch (error) {
@@ -50,14 +59,32 @@ export class JokesService {
     try {
       const joke = await this.jokeModel.findById(id).exec();
       if (!joke) {
-        throw new NotFoundException("Joke not found");
+        throw new NotFoundException('Joke not found');
       }
       return joke;
     } catch (error) {
-      throw new InternalServerErrorException(`Error finding joke: ${error.message}`);
+      throw new InternalServerErrorException(
+        `Error finding joke: ${error.message}`,
+      );
     }
   }
-  
+
+  async updateJoke(id: string, updateJokeDto: UpdateJokeDto): Promise<Joke> {
+    try {
+      const updatedJoke = await this.jokeModel
+        .findByIdAndUpdate(id, updateJokeDto, { new: true })
+        .exec();
+      if (!updatedJoke) {
+        throw new NotFoundException(`Joke not found`);
+      }
+      return updatedJoke;
+    } catch (error) {
+      throw new InternalServerErrorException(
+        `Error updating joke: ${error.message}`,
+      );
+    }
+  }
+
   async deleteJoke(id: string): Promise<{ message: string }> {
     try {
       const deletedJoke = await this.jokeModel.findByIdAndDelete(id);

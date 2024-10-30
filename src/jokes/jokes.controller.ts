@@ -7,9 +7,11 @@ import {
   Param,
   HttpException,
   HttpStatus,
+  Put,
 } from '@nestjs/common';
 import { JokesService } from './jokes.service';
 import { CreateJokeDto } from './dto/create-joke.dto';
+import { UpdateJokeDto } from './dto/update-joke.dto';
 
 @Controller('jokes')
 export class JokesController {
@@ -33,6 +35,14 @@ export class JokesController {
   @Get('types')
   async findAllTypes() {
     return this.jokesService.findAllTypes();
+  }
+
+  @Put(':id')
+  async updateJoke(
+    @Param('id') id: string,
+    @Body() updateJokeDto: UpdateJokeDto,
+  ) {
+    return this.jokesService.updateJoke(id, updateJokeDto);
   }
 
   @Delete(':id')
