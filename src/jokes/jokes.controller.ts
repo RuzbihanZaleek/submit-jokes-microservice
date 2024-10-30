@@ -1,6 +1,7 @@
-import { Controller, Post, Get, Body } from '@nestjs/common';
+import { Controller, Post, Get, Body, Delete, Param } from '@nestjs/common';
 import { JokesService } from './jokes.service';
 import { CreateJokeDto } from './dto/create-joke.dto';
+import { DeleteJokeDto } from './dto/delete-joke.dto';
 
 @Controller('jokes')
 export class JokesController {
@@ -14,5 +15,10 @@ export class JokesController {
   @Get()
   async findAll() {
     return this.jokesService.findAll();
+  }
+
+  @Delete(':id')
+  async deleteJoke(@Param() params: DeleteJokeDto) {
+    return this.jokesService.deleteJoke(params.id);
   }
 }

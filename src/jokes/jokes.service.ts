@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Joke } from './schemas/joke.schema';
@@ -17,5 +17,13 @@ export class JokesService {
 
   async findAll(): Promise<Joke[]> {
     return this.jokeModel.find().exec();
+  }
+
+  async deleteJoke(id: string): Promise<{ message: string }> {
+    const deletedJoke = await this.jokeModel.findByIdAndDelete(id);
+    if (!deletedJoke) {
+      return { message: `Joke not found` };
+    }
+    return { message: 'Joke deleted successfully' };
   }
 }
