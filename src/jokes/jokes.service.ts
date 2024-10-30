@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Joke } from './schemas/joke.schema';
@@ -11,19 +15,35 @@ export class JokesService {
   ) {}
 
   async create(createJokeDto: CreateJokeDto): Promise<Joke> {
-    const newJoke = new this.jokeModel(createJokeDto);
-    return newJoke.save();
+    try {
+      const newJoke = new this.jokeModel(createJokeDto);
+      return await newJoke.save();
+    } catch (error) {
+      throw new InternalServerErrorException(
+        `Error creating joke: ${error.message}`,
+      );
+    }
   }
 
   async findAll(): Promise<Joke[]> {
-    return this.jokeModel.find().exec();
+    try {
+      return await this.jokeModel.find().exec();
+    } catch (error) {
+      throw new InternalServerErrorException(
+        `Error retrieving jokes: ${error.message}`,
+      );
+    }
   }
 
   async deleteJoke(id: string): Promise<{ message: string }> {
-    const deletedJoke = await this.jokeModel.findByIdAndDelete(id);
-    if (!deletedJoke) {
-      return { message: `Joke not found` };
+    try {
+      const deletedJoke = await this.jokeModel.findByIdAndDelete(id);
+      if (!deletedJoke) {
+        throw new NotFoundException(`Joke not found`);
+      }
+      return { message: 'Joke deleted successfully' };
+    } catch (error) {
+      throw new Error(`Error deleting joke: ${error.message}`);
     }
-    return { message: 'Joke deleted successfully' };
   }
 }

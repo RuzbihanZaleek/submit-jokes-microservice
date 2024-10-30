@@ -1,4 +1,13 @@
-import { Controller, Post, Get, Body, Delete, Param } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  Delete,
+  Param,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { JokesService } from './jokes.service';
 import { CreateJokeDto } from './dto/create-joke.dto';
 import { DeleteJokeDto } from './dto/delete-joke.dto';
@@ -19,6 +28,10 @@ export class JokesController {
 
   @Delete(':id')
   async deleteJoke(@Param() params: DeleteJokeDto) {
-    return this.jokesService.deleteJoke(params.id);
+    try {
+      return await this.jokesService.deleteJoke(params.id);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }
