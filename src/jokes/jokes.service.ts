@@ -46,6 +46,18 @@ export class JokesService {
     }
   }
 
+  async findById(id: string): Promise<Joke> {
+    try {
+      const joke = await this.jokeModel.findById(id).exec();
+      if (!joke) {
+        throw new NotFoundException("Joke not found");
+      }
+      return joke;
+    } catch (error) {
+      throw new InternalServerErrorException(`Error finding joke: ${error.message}`);
+    }
+  }
+  
   async deleteJoke(id: string): Promise<{ message: string }> {
     try {
       const deletedJoke = await this.jokeModel.findByIdAndDelete(id);

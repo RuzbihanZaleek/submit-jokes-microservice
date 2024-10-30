@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { JokesService } from './jokes.service';
 import { CreateJokeDto } from './dto/create-joke.dto';
-import { DeleteJokeDto } from './dto/delete-joke.dto';
 
 @Controller('jokes')
 export class JokesController {
@@ -26,15 +25,20 @@ export class JokesController {
     return this.jokesService.findAll();
   }
 
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    return this.jokesService.findById(id);
+  }
+
   @Get('types')
   async findAllTypes() {
     return this.jokesService.findAllTypes();
   }
 
   @Delete(':id')
-  async deleteJoke(@Param() params: DeleteJokeDto) {
+  async deleteJoke(@Param('id') id: string) {
     try {
-      return await this.jokesService.deleteJoke(params.id);
+      return await this.jokesService.deleteJoke(id);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
