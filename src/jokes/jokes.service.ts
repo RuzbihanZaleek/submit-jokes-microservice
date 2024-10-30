@@ -6,7 +6,9 @@ import { CreateJokeDto } from './dto/create-joke.dto';
 
 @Injectable()
 export class JokesService {
-  constructor(@InjectModel(Joke.name) private readonly jokeModel: Model<Joke>) {}
+  constructor(
+    @InjectModel(Joke.name) private readonly jokeModel: Model<Joke>,
+  ) {}
 
   async create(createJokeDto: CreateJokeDto): Promise<Joke> {
     const newJoke = new this.jokeModel(createJokeDto);
