@@ -28,6 +28,7 @@ export class JokesService {
       const newJoke = new this.jokeModel(createJokeDto);
       return await newJoke.save();
     } catch (error) {
+      if (error instanceof ConflictException) throw error;
       throw new InternalServerErrorException(
         `Error creating joke: ${error.message}`,
       );
@@ -63,6 +64,7 @@ export class JokesService {
       }
       return joke;
     } catch (error) {
+      if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException(
         `Error finding joke: ${error.message}`,
       );
@@ -79,6 +81,7 @@ export class JokesService {
       }
       return updatedJoke;
     } catch (error) {
+      if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException(
         `Error updating joke: ${error.message}`,
       );
@@ -93,6 +96,7 @@ export class JokesService {
       }
       return { message: 'Joke deleted successfully' };
     } catch (error) {
+      if (error instanceof NotFoundException) throw error;
       throw new Error(`Error deleting joke: ${error.message}`);
     }
   }
