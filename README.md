@@ -18,8 +18,6 @@ The **Submit Jokes Microservice** is a REST API built with Node.js and Express t
 
 ### Installation
 
-### Installation
-
 1. Clone the repository:
    ```bash
    git clone https://github.com/RuzbihanZaleek/submit-jokes-microservice.git
