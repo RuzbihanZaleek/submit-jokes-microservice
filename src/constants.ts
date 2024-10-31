@@ -1,4 +1,3 @@
-// src/jokes/constants.ts
 export const JOKE_MESSAGES = {
   CREATE_SUCCESS: 'Submit joke created successfully',
   CREATE_CONFLICT: 'Submit joke already exists',
