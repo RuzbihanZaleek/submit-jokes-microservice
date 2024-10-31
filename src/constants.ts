@@ -1,7 +1,7 @@
 export const JOKE_MESSAGES = {
-  CREATE_SUCCESS: 'Submit joke created successfully',
-  CREATE_CONFLICT: 'Submit joke already exists',
-  CREATE_ERROR: 'Error creating submit joke',
+  CREATE_SUCCESS: 'Joke created successfully',
+  CREATE_CONFLICT: 'Joke already exists',
+  CREATE_ERROR: 'Error creating joke',
   FETCH_SUCCESS: 'Jokes fetched successfully',
   FETCH_ERROR: 'Error retrieving jokes',
   FETCH_TYPES_SUCCESS: 'Jokes types fetched successfully',
@@ -12,3 +12,11 @@ export const JOKE_MESSAGES = {
   DELETE_SUCCESS: 'Joke deleted successfully',
   DELETE_ERROR: 'Error deleting joke',
 };
+
+export const SWAGGER_CONFIG = {
+    TITLE: 'Submit Jokes Microservice',
+    DESCRIPTION: 'API documentation for the Submit Jokes microservices',
+    VERSION: '1.0',
+    TAG: 'submit-jokes',
+  };
+  

@@ -9,6 +9,7 @@ import { Model } from 'mongoose';
 import { Joke } from './schemas/joke.schema';
 import { CreateJokeDto } from './dto/create-joke.dto';
 import { UpdateJokeDto } from './dto/update-joke.dto';
+import { JOKE_MESSAGES } from 'src/constants';
 
 @Injectable()
 export class JokesService {
@@ -22,7 +23,7 @@ export class JokesService {
         .findOne({ content: createJokeDto.content })
         .exec();
       if (existingJoke) {
-        throw new ConflictException('Joke already exists');
+        throw new ConflictException(JOKE_MESSAGES.CREATE_CONFLICT);
       }
 
       const newJoke = new this.jokeModel(createJokeDto);
@@ -30,7 +31,7 @@ export class JokesService {
     } catch (error) {
       if (error instanceof ConflictException) throw error;
       throw new InternalServerErrorException(
-        `Error creating joke: ${error.message}`,
+        `${JOKE_MESSAGES.CREATE_ERROR}: ${error.message}`,
       );
     }
   }
@@ -41,7 +42,7 @@ export class JokesService {
       return types;
     } catch (error) {
       throw new InternalServerErrorException(
-        `Error retrieving joke types: ${error.message}`,
+        `${JOKE_MESSAGES.FETCH_TYPES_ERROR}: ${error.message}`,
       );
     }
   }
@@ -51,7 +52,7 @@ export class JokesService {
       return await this.jokeModel.find().exec();
     } catch (error) {
       throw new InternalServerErrorException(
-        `Error retrieving jokes: ${error.message}`,
+        `${JOKE_MESSAGES.FETCH_ERROR}: ${error.message}`,
       );
     }
   }
@@ -60,13 +61,13 @@ export class JokesService {
     try {
       const joke = await this.jokeModel.findById(id).exec();
       if (!joke) {
-        throw new NotFoundException('Joke not found');
+        throw new NotFoundException(JOKE_MESSAGES.NOT_FOUND);
       }
       return joke;
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException(
-        `Error finding joke: ${error.message}`,
+        `${JOKE_MESSAGES.FETCH_ERROR}: ${error.message}`,
       );
     }
   }
@@ -77,13 +78,13 @@ export class JokesService {
         .findByIdAndUpdate(id, updateJokeDto, { new: true })
         .exec();
       if (!updatedJoke) {
-        throw new NotFoundException(`Joke not found`);
+        throw new NotFoundException(JOKE_MESSAGES.NOT_FOUND);
       }
       return updatedJoke;
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException(
-        `Error updating joke: ${error.message}`,
+        `${JOKE_MESSAGES.UPDATE_ERROR}: ${error.message}`,
       );
     }
   }
@@ -92,12 +93,12 @@ export class JokesService {
     try {
       const deletedJoke = await this.jokeModel.findByIdAndDelete(id);
       if (!deletedJoke) {
-        throw new NotFoundException(`Joke not found`);
+        throw new NotFoundException(JOKE_MESSAGES.NOT_FOUND);
       }
-      return { message: 'Joke deleted successfully' };
+      return { message: JOKE_MESSAGES.DELETE_SUCCESS };
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
-      throw new Error(`Error deleting joke: ${error.message}`);
+      throw new Error(`${JOKE_MESSAGES.DELETE_ERROR}: ${error.message}`);
     }
   }
 }
