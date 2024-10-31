@@ -27,14 +27,14 @@ export class JokesController {
     return this.jokesService.findAll();
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return this.jokesService.findById(id);
-  }
-
   @Get('types')
   async findAllTypes() {
     return this.jokesService.findAllTypes();
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    return this.jokesService.findById(id);
   }
 
   @Put(':id')
